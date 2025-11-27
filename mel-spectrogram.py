@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-signal, sr = librosa.load('.\\audio-files\\Generation.mp3')
-fig, axs = plt.subplots(2, 1, figsize=(20, 5))
+signal, sr = librosa.load('.\\audio-files\\Behind Her Eyes (widerberg Remix).mp3', sr=None)
+fig, axs = plt.subplots(3, 1, figsize=(20, 10), sharex=True)
 
 # =========================
 # 1) WAVEFORM (time-domain)
@@ -63,6 +63,22 @@ axs[1].label_outer()
 # Uncomment to schow the colorbar (for the dB scale)
 #cbar = fig.colorbar(img, ax=axs[1])
 #cbar.set_label('Power [dB]')
+
+# =========================
+# 3) SPECTRAL CENTROID
+# =========================
+centroid = librosa.feature.spectral_centroid(
+    y=signal,
+    sr=sr,
+    n_fft=n_fft,
+    hop_length=hop_length
+)
+
+times_centroid = librosa.times_like(centroid, sr=sr, hop_length=hop_length)
+
+axs[2].plot(times_centroid, centroid[0], label='Spectral Centroid (Hz)')
+axs[2].set_ylabel('Centroid (Hz)')
+axs[2].legend()
 
 # Show the final figure
 plt.show()
